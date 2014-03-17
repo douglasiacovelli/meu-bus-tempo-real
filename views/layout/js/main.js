@@ -1,5 +1,6 @@
 var map;
 var markers = [];
+var interval;
 
 $(function(){
 	$('form').submit(function(e){
@@ -55,15 +56,15 @@ $(function(){
 	}
 
 	function callback_search(data){
-		$('#search').slideUp();
-		$('#content').slideDown();
+		clearInterval(interval);
 
 		$.each(data, function(index, value){
-			
-			var text = 'Destino: '+value.DenominacaoTPTS+' - '+value.Letreiro+'-'+value.Tipo;
+			console.log(data);
+
+			var text = 'Destino: '+value.DenominacaoTSTP+' - '+value.Letreiro+'-'+value.Tipo;
 			
 			if(value.Sentido == 1){
-				text = 'Destino: '+value.DenominacaoTSTP+' - '+value.Letreiro+'-'+value.Tipo;
+				text = 'Destino: '+value.DenominacaoTPTS+' - '+value.Letreiro+'-'+value.Tipo;
 			}
 
 			$('#list').append(function(){
@@ -76,6 +77,9 @@ $(function(){
 				);
 			});
 		});
+
+		$('#search').slideUp();
+		$('#content').slideDown();
 		
 	}
 
@@ -85,7 +89,7 @@ $(function(){
 
 		$.post('/realtime', {'id': id}, callback_realtime);
 
-		setInterval(function(){
+		interval = setInterval(function(){
 			$.post('/realtime', {'id': id}, callback_realtime);
 			console.log('call');
 		},30000)
@@ -93,6 +97,9 @@ $(function(){
 	}
 
 	function callback_realtime(data){
+		if(data.length == 0){
+			return false;
+		}
 		clear_markers();
 
 		$.each(data.vs, function(index, bus){

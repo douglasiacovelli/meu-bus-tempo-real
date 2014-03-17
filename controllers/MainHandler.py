@@ -15,7 +15,6 @@ from google.appengine.api import memcache
 
 class home(webapp2.RequestHandler):
 	def get(self):
-	
 		# We are using the template module to output the page.
 	
 		path = os.path.join(os.path.dirname(__file__), '..' , 'views' ,'home.html')
@@ -28,17 +27,26 @@ class home(webapp2.RequestHandler):
 			template.render( path,{
 				"title"	: 'Meu App do bus'
 		}))
+
+		
 	
 	def post(self):
 
 		class_aux = aux()
 		api_credential = class_aux.auth_sptrans()
 
+		print(api_credential)
 		#Prepare and fetch the bus code
 		bus_code = str(self.request.get('bus-code'))
+
+		bus_code = urllib.quote_plus(bus_code)
+		print(bus_code)
+
 		url = 'http://api.olhovivo.sptrans.com.br/v0/Linha/Buscar?termosBusca='+bus_code
 
 		bus_lines = urlfetch.fetch(url = url, method = urlfetch.GET, headers = {'Cookie': api_credential})
+
+		print(bus_lines.content)
 
 		#send the response
 		self.response.headers['Content-Type'] = 'application/json'
@@ -59,19 +67,19 @@ class realtime(webapp2.RequestHandler):
 
 class aux():
 	def auth_sptrans(self):
-		api_credential = memcache.get('api_credential')
+		# api_credential = memcache.get('api_credential')
 
-		# Only make one Auth request between 30 min (1800s) 
-		if api_credential is None:
+		# # Only make one Auth request between 30 min (1800s) 
+		# if api_credential is None:
 
-			url = 'http://api.olhovivo.sptrans.com.br/v0/Login/Autenticar?token='+config.token
-			result = urlfetch.fetch(url = url, method = urlfetch.POST)
-			
-			api_credential = result.headers['set-cookie']
+		url = 'http://api.olhovivo.sptrans.com.br/v0/Login/Autenticar?token='+config.token
+		result = urlfetch.fetch(url = url, method = urlfetch.POST)
 
-			memcache.add('api_credential', api_credential, 1800)
-			print('criado memcache')
-		return api_credential
+		api_credential = result.headers['set-cookie']
+
+		api_credential = api_credential.split(';')[0]
+
+		return str(api_credential)
 			
 
 		
