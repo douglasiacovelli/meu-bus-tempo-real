@@ -11,6 +11,7 @@ from google.appengine.ext.webapp import template
 
 #running webapp2 view and setting URL routing
 app = webapp2.WSGIApplication([
-		('/', MainHandler.home)
+		('/', MainHandler.home),
+		('/realtime', MainHandler.realtime)
 
 	],debug = True)

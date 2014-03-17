@@ -30,16 +30,38 @@ class home(webapp2.RequestHandler):
 		}))
 	
 	def post(self):
+
+		class_aux = aux()
+		api_credential = class_aux.auth_sptrans()
+
+		#Prepare and fetch the bus code
+		bus_code = str(self.request.get('bus-code'))
+		url = 'http://api.olhovivo.sptrans.com.br/v0/Linha/Buscar?termosBusca='+bus_code
+
+		bus_lines = urlfetch.fetch(url = url, method = urlfetch.GET, headers = {'Cookie': api_credential})
+
+		#send the response
 		self.response.headers['Content-Type'] = 'application/json'
+		self.response.write(bus_lines.content)
 
-		bus_code = self.request.get('bus-code')
 
+class realtime(webapp2.RequestHandler):
+	def post(self):
+		class_aux = aux()
+		api_credential = class_aux.auth_sptrans()
+
+		url = 'http://api.olhovivo.sptrans.com.br/v0/Posicao?codigoLinha='+self.request.get('id')
+		buses_positions = urlfetch.fetch(url = url, method = urlfetch.GET, headers = {'Cookie': api_credential})
+
+		self.response.headers['Content-Type'] = 'application/json'
+		self.response.write(buses_positions.content)
+
+
+class aux():
+	def auth_sptrans(self):
 		api_credential = memcache.get('api_credential')
-		expiration_time = memcache.get('expiration_time')
 
-		now = datetime.datetime.now()
-
-		# Avoid a lot of Auth requests. Only one is necessary
+		# Only make one Auth request between 30 min (1800s) 
 		if api_credential is None:
 
 			url = 'http://api.olhovivo.sptrans.com.br/v0/Login/Autenticar?token='+config.token
@@ -49,18 +71,7 @@ class home(webapp2.RequestHandler):
 
 			memcache.add('api_credential', api_credential, 1800)
 			print('criado memcache')
-		
-
-		bus_code = str(bus_code)
-		url = 'http://api.olhovivo.sptrans.com.br/v0/Linha/Buscar?termosBusca='+bus_code
-
-		bus_lines = urlfetch.fetch(url = url, method = urlfetch.GET, headers = {'Cookie': api_credential})
-
-
-		print(bus_lines.content)
-		self.response.write(bus_lines.content)
-		
-
+		return api_credential
 			
 
 		
