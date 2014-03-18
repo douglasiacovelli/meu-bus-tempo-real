@@ -5,15 +5,10 @@ import json
 import urllib
 import datetime
 
-import unicodedata
-
 from configs import config
 from google.appengine.api import urlfetch
 
 from google.appengine.ext.webapp import template
-
-from google.appengine.api import memcache
-
 
 class home(webapp2.RequestHandler):
 	def get(self):
@@ -38,11 +33,12 @@ class home(webapp2.RequestHandler):
 
 
 		print(api_credential)
-		#Prepare and fetch the bus code
+
+		# Prepare and fetch the bus code
 		bus_code = str(self.request.get('bus-code'))
-		
 		bus_code = urllib.quote_plus(bus_code)
 		
+		# To-Do: save requests already made and the result to avoid one more call to the API
 
 		good_response = False
 
