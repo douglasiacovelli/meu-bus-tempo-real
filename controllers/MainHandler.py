@@ -26,9 +26,8 @@ class home(webapp2.RequestHandler):
 			# and a dictionary of key/value pairs that will be
 			# embedded in the page.
 			
-			template.render( path,{
-				"title"	: 'Meu App do bus'
-		}))
+			template.render(path,{})
+		)
 
 		
 	
@@ -82,10 +81,6 @@ class realtime(webapp2.RequestHandler):
 
 class aux():
 	def auth_sptrans(self):
-		#api_credential = memcache.get('api_credential')
-
-		# # Only make one Auth request between 30 min (1800s) 
-		#if api_credential is None:
 		 
 		url = 'http://api.olhovivo.sptrans.com.br/v0/Login/Autenticar?token='+config.token
 		result = urlfetch.fetch(url = url, method = urlfetch.POST)
