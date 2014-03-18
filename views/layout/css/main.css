@@ -23,6 +23,11 @@ body {
 	z-index: 2;
 }
 
+.jumbotron h2{
+	margin-top: 45px;
+	color: #5E5E5E;
+}
+
 .map{
 	padding-top: 50px;
 	position: absolute;
@@ -35,15 +40,23 @@ body {
 	transition: opacity 0.3s;
 }
 
+.navbar{
+	background-color: #FCFCFC;
+	border-bottom: 1px solid #D8D8D8;
+	box-shadow: 1px 0px 14px -8px #000;
+}
+
+.social{
+	max-width: 80px;
+	margin-top: 15px;
+	margin-left: 5px;
+}
 
 
+.checkbox input{
+	margin-top: 7px;
+}
 
-
-
-
-
-
-
-
-
-
+.checkbox label{
+	font-size: 1.3em;
+}

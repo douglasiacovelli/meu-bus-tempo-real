@@ -1,9 +1,13 @@
 var map;
 var markers = [];
 var interval;
+var trafficLayer;
 
 $(function(){
 	$('form').submit(function(e){
+		$(this).find('button').attr('disabled',true);
+		$(this).find('button').html('Procurando...');
+		$(this).val()
 		disable_controls();
 		e.preventDefault();
 
@@ -16,8 +20,21 @@ $(function(){
 		e.preventDefault();
 		$('#input-bus-code').val('');
 		$('#search').slideToggle();
-		
+	});
 
+	$('#traffic').change(function(){
+		var checked = $(this).is(':checked');
+
+		if(checked){
+			if(trafficLayer == undefined){
+				trafficLayer = new google.maps.TrafficLayer();	
+			}
+			trafficLayer.setMap(map);
+		}else{
+			if(trafficLayer !== undefined){
+				trafficLayer.setMap(null);
+			}
+		}
 	});
 	
 	function setAllMap(map) {
@@ -57,6 +74,9 @@ $(function(){
 	}
 
 	function callback_search(data){
+		$('form button').attr('disabled',false);
+		$('form button').html('Buscar');
+
 		clearInterval(interval);
 
 		$.each(data, function(index, value){
@@ -144,4 +164,6 @@ function initialize() {
 
 	map = new google.maps.Map(document.getElementById('map-canvas'),
 		mapOptions);
+
+	
 }
