@@ -35,19 +35,22 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#">Meu Bus em tempo real</a>
+					<a class="navbar-brand" href="/">Meu Bus em tempo real</a>
 				</div>
 				<div class="navbar-collapse collapse">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="#">Início</a></li>
 						<li><a id="search-another" href="">Busque outra linha</a></li>
-						<li><a href="#contact">Quem fez?</a></li>
+						
+					</ul>
+					<ul class="nav navbar-nav pull-right">
+						<li class="disabled" ><a id="about-link" href="" style="color: #fff">Desenvolvido por Douglas Iacovelli</a></li>
 					</ul>
 				</div><!--/.navbar-collapse -->
 			</div>
 		</div>
 		
 		<!-- Main jumbotron for a primary marketing message or call to action -->
+
 		<div class="jumbotron" id="search">
 			<div class="container">
 				<h2>Busque uma linha de ônibus</h2>
@@ -67,7 +70,9 @@
 					<div class="spacer-10"></div>
 				</div>
 			</div>
-		</div>	
+		</div>
+
+		
 		
 		
 
@@ -84,10 +89,14 @@
 		<script src="js/main.js"></script>
 
 		<script>
-				var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
-				(function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
-				g.src='//www.google-analytics.com/ga.js';
-				s.parentNode.insertBefore(g,s)}(document,'script'));
-		</script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-35893599-2', 'meu-bus-tempo-real.appspot.com');
+			ga('send', 'pageview');
+
+</script>
 	</body>
 </html>

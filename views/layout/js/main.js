@@ -14,10 +14,11 @@ $(function(){
 
 	$('#search-another').click(function(e){
 		e.preventDefault();
+		$('#input-bus-code').val('');
 		$('#search').slideToggle();
+		
 
 	});
-
 	
 	function setAllMap(map) {
 		for (var i = 0; i < markers.length; i++) {
@@ -78,6 +79,7 @@ $(function(){
 			});
 		});
 
+		
 		$('#search').slideUp();
 		$('#content').slideDown();
 		
@@ -97,7 +99,11 @@ $(function(){
 	}
 
 	function callback_realtime(data){
-		if(data.length == 0){
+		if(data !== undefined){
+			if(data.length == 0){
+				return false;
+			}
+		}else{
 			return false;
 		}
 		clear_markers();
@@ -109,7 +115,7 @@ $(function(){
 			var marker = new google.maps.Marker({
 				position: location,
 				map: map,
-				title:"Õnibus código: "+bus.p
+				title:"Ônibus código: "+bus.p
 			});
 			markers.push(marker);
 		});

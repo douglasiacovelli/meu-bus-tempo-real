@@ -35,6 +35,7 @@ class home(webapp2.RequestHandler):
 		class_aux = aux()
 		api_credential = class_aux.auth_sptrans()
 
+
 		print(api_credential)
 		#Prepare and fetch the bus code
 		bus_code = str(self.request.get('bus-code'))
@@ -42,9 +43,15 @@ class home(webapp2.RequestHandler):
 		bus_code = urllib.quote_plus(bus_code)
 		print(bus_code)
 
-		url = 'http://api.olhovivo.sptrans.com.br/v0/Linha/Buscar?termosBusca='+bus_code
+		good_response = False
 
-		bus_lines = urlfetch.fetch(url = url, method = urlfetch.GET, headers = {'Cookie': api_credential})
+		while good_response is False:
+
+			url = 'http://api.olhovivo.sptrans.com.br/v0/Linha/Buscar?termosBusca='+bus_code
+			bus_lines = urlfetch.fetch(url = url, method = urlfetch.GET, deadline=15, follow_redirects=False, headers = {'Cookie': api_credential})
+
+			if bus_lines.status_code != 401:
+				good_response = True
 
 		print(bus_lines.content)
 
@@ -58,8 +65,14 @@ class realtime(webapp2.RequestHandler):
 		class_aux = aux()
 		api_credential = class_aux.auth_sptrans()
 
-		url = 'http://api.olhovivo.sptrans.com.br/v0/Posicao?codigoLinha='+self.request.get('id')
-		buses_positions = urlfetch.fetch(url = url, method = urlfetch.GET, headers = {'Cookie': api_credential})
+		good_response = False
+
+		while good_response is False:
+			url = 'http://api.olhovivo.sptrans.com.br/v0/Posicao?codigoLinha='+self.request.get('id')
+			buses_positions = urlfetch.fetch(url = url, method = urlfetch.GET, deadline=15, follow_redirects=False, headers = {'Cookie': api_credential})
+
+			if buses_positions.status_code != 401:
+				good_response = True
 
 		self.response.headers['Content-Type'] = 'application/json'
 		self.response.write(buses_positions.content)
@@ -67,19 +80,17 @@ class realtime(webapp2.RequestHandler):
 
 class aux():
 	def auth_sptrans(self):
-		# api_credential = memcache.get('api_credential')
+		#api_credential = memcache.get('api_credential')
 
 		# # Only make one Auth request between 30 min (1800s) 
-		# if api_credential is None:
-
+		#if api_credential is None:
+		 
 		url = 'http://api.olhovivo.sptrans.com.br/v0/Login/Autenticar?token='+config.token
 		result = urlfetch.fetch(url = url, method = urlfetch.POST)
 
 		api_credential = result.headers['set-cookie']
 
-		api_credential = api_credential.split(';')[0]
-
-		return str(api_credential)
+		return api_credential
 			
 
 		
