@@ -5,6 +5,8 @@ import json
 import urllib
 import datetime
 
+import unicodedata
+
 from configs import config
 from google.appengine.api import urlfetch
 
@@ -39,9 +41,9 @@ class home(webapp2.RequestHandler):
 		print(api_credential)
 		#Prepare and fetch the bus code
 		bus_code = str(self.request.get('bus-code'))
-
+		
 		bus_code = urllib.quote_plus(bus_code)
-		print(bus_code)
+		
 
 		good_response = False
 
@@ -91,8 +93,3 @@ class aux():
 		api_credential = result.headers['set-cookie']
 
 		return api_credential
-			
-
-		
-		
-		
