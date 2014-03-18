@@ -1,0 +1,4 @@
+*.pyc
+controllers/*.pyc
+models/*.pyc
+configs/*.pyc
