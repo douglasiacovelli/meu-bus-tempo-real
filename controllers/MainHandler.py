@@ -74,6 +74,41 @@ class realtime(webapp2.RequestHandler):
 		self.response.headers['Content-Type'] = 'application/json'
 		self.response.write(buses_positions.content)
 
+	def get(self):
+		class_aux = aux()
+		api_credential = class_aux.auth_sptrans()
+
+
+		bus_line = self.request.get('bus_line')
+		
+		positions = []
+
+		if bus_line == '8012':
+			bus_codes = ['2023','34791']
+		else:
+			bus_codes = ['2085', '34853']
+
+		for bus_code in bus_codes:
+			good_response = False
+
+			while good_response is False:
+				url = 'http://api.olhovivo.sptrans.com.br/v0/Posicao?codigoLinha='+bus_code
+				buses_positions = urlfetch.fetch(url = url, method = urlfetch.GET, deadline=15, follow_redirects=False, headers = {'Cookie': api_credential})
+
+				if buses_positions.status_code != 401:
+					good_response = True
+					data = buses_positions.content
+					#print data
+					data = json.loads(data)
+					
+					for position in data['vs']:
+						positions.append(position)		
+
+		#print positions
+		positions = json.dumps(positions)
+
+		self.response.headers['Content-Type'] = 'application/json'
+		self.response.write(positions)
 
 class aux():
 	def auth_sptrans(self):
